@@ -29,7 +29,7 @@ func (b *BaseChainSubscriber) Stop() {
 }
 
 func (b *BaseChainSubscriber) Restart() {
-	b.stopChan <- true
+	b.restartChan <- true
 }
 
 func (b *BaseChainSubscriber) Start(c *client.Client) error {
@@ -39,6 +39,27 @@ func (b *BaseChainSubscriber) Start(c *client.Client) error {
 			return err
 		}
 		for {
+			// These need to be separate such that if there is an error, always choose
+			// that chan, but also in the following select incase we are caught up
+			select {
+			case <-b.restartChan:
+				sub.Unsubscribe()
+				sub, err = c.Api.RPC.Chain.SubscribeFinalizedHeads()
+				if err != nil {
+					return err
+				}
+			case <-b.stopChan:
+				return nil
+			case err = <-sub.Err():
+				b.onSubscriptionError(err)
+				sub.Unsubscribe()
+				sub, err = c.Api.RPC.Chain.SubscribeFinalizedHeads()
+				if err != nil {
+					return err
+				}
+			default:
+			}
+
 			select {
 			case <-b.restartChan:
 				sub.Unsubscribe()
