@@ -21,7 +21,7 @@ func (b *BaseChainSubscriber) SetOnSubscriptionError(f func(e error)) {
 }
 
 func NewChainSubscriber() *BaseChainSubscriber {
-	return &BaseChainSubscriber{stopChan: make(chan bool, 1)}
+	return &BaseChainSubscriber{stopChan: make(chan bool), restartChan: make(chan bool, 1)}
 }
 
 func (b *BaseChainSubscriber) Stop() {
