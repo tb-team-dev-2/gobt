@@ -15,6 +15,7 @@ func init() {
 	extrinsic.PayloadMutatorFns[extensions.SignedExtensionName("SubtensorSignedExtension")] = func(payload *extrinsic.Payload) {}
 	extrinsic.PayloadMutatorFns[extensions.SignedExtensionName("SubtensorTransactionExtension")] = func(payload *extrinsic.Payload) {}
 	extrinsic.PayloadMutatorFns[extensions.SignedExtensionName("CommitmentsSignedExtension")] = func(payload *extrinsic.Payload) {}
+	extrinsic.PayloadMutatorFns[extensions.SignedExtensionName("DrandPriority")] = func(payload *extrinsic.Payload) {}
 }
 
 type SigningContext struct {
