@@ -1,0 +1,5 @@
+[submodule "bittensor-drand"]
+	path = third_party/bittensor-drand
+	url = https://github.com/opentensor/bittensor-drand
+[submodule "third_party/bittensor-drand"]
+	url = https://github.com/tb-team-dev-2/bittensor-drand
