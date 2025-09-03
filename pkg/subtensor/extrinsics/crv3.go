@@ -22,6 +22,7 @@ func GenerateCommit(
 	netuid uint16,
 	revealEpochs uint64,
 	blockTime float64,
+	hotkey []byte,
 ) ([]byte, uint64, error) {
 	if len(uids) != len(vals) {
 		return nil, 0, fmt.Errorf("uids and vals must have same length")
@@ -31,6 +32,13 @@ func GenerateCommit(
 	uPtr := (*C.uint16_t)(unsafe.Pointer(&uids[0]))
 	vPtr := (*C.uint16_t)(unsafe.Pointer(&vals[0]))
 	length := C.size_t(len(uids))
+	
+	var hotkeyPtr *C.uint8_t
+	var hotkeyLen C.size_t
+	if len(hotkey) > 0 {
+		hotkeyPtr = (*C.uint8_t)(unsafe.Pointer(&hotkey[0]))
+		hotkeyLen = C.size_t(len(hotkey))
+	}
 
 	var cRound C.uint64_t
 	var cErr *C.char
@@ -45,6 +53,7 @@ func GenerateCommit(
 		C.uint16_t(netuid),
 		C.uint64_t(revealEpochs),
 		C.double(blockTime),
+		hotkeyPtr, hotkeyLen,
 		&cRound,
 		&cErr,
 	)

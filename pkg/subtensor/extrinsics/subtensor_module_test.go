@@ -230,6 +230,7 @@ func TestSubtensorModuleExtrinsics(t *testing.T) {
 			uint16(netuid),
 			uint64(revealPeriodEpochs.Int64()),
 			blockTime,
+			env.Bob.Hotkey.Keypair.PublicKey,
 		)
 		require.NoError(t, err)
 		require.NotEmpty(t, commitBytes, "encrypted commit should not be empty")
